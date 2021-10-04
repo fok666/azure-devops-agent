@@ -37,7 +37,7 @@ RUN pwsh -Command "Install-Module -Name 'Az' -Scope CurrentUser -Repository PSGa
 
 # Install Azure DevOps Agent
 ARG TARGETARCH=amd64
-ARG AGENT_VERSION=2.193.0
+ARG AGENT_VERSION=2.193.1
 WORKDIR /azp
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
 	AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
