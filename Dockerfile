@@ -32,6 +32,12 @@ RUN apt-get update \
 && add-apt-repository universe \
 && apt-get install -y powershell
 
+# Install Kubectl - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Install YQ - https://github.com/mikefarah/yq
+RUN curl -LO "https://github.com/mikefarah/yq/releases/download/v$(curl -sI https://github.com/mikefarah/yq/releases/latest | grep '^location:' | grep -Eo '[0-9]+[.][0-9]+[.][0-9]+')/yq_linux_amd64" && install -o root -g root -m 0755 yq_linux_amd64 /usr/local/bin/yq
+
 # Install latest Azure Powershell Modules
 RUN pwsh -Command "Install-Module -Name 'Az' -Scope CurrentUser -Repository PSGallery -Force"
 
