@@ -21,7 +21,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install latest Azure CLI
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
-&& rm -rf /var/lib/apt/lists/*
+&& rm -rf /var/lib/apt/lists/* \
+&& az config set extension.use_dynamic_install=yes_without_prompt \
+&& az extension add --name azure-devops
 
 # Install latest PowerShell
 RUN apt-get update \
