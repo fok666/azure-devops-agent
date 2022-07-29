@@ -6,6 +6,8 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
 # Install Docker-in-Docker
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  apt-transport-https \
+  software-properties-common \
   ca-certificates \
   curl \
   unzip \
@@ -16,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libicu66 \
   libunwind8 \
   netcat \
+  wget \
   libssl1.0 \
   docker.io \
 && rm -rf /var/lib/apt/lists/*
@@ -27,9 +30,7 @@ RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
 && az extension add --name azure-devops
 
 # Install latest PowerShell
-RUN apt-get update \
-&& apt-get install -y wget apt-transport-https software-properties-common \
-&& wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
+RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && apt-get update \
 && add-apt-repository universe \
@@ -57,7 +58,7 @@ RUN pwsh -Command "Install-Module -Name 'Az' -Scope CurrentUser -Repository PSGa
 
 # Install Azure DevOps Agent
 ARG TARGETARCH=amd64
-ARG AGENT_VERSION=2.204.0
+ARG AGENT_VERSION=2.206.1
 WORKDIR /azp
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
 	AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
