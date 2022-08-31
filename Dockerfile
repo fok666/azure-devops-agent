@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libcurl4 \
   libicu66 \
   libunwind8 \
+  libxcb1 \
+  libnss3 \
   netcat \
   wget \
   libssl1.0 \
@@ -59,7 +61,7 @@ RUN pwsh -Command "Install-Module -Name 'Az' -Scope CurrentUser -Repository PSGa
 
 # Install Azure DevOps Agent
 ARG TARGETARCH=amd64
-ARG AGENT_VERSION=2.206.1
+ARG AGENT_VERSION=2.209.0
 WORKDIR /azp
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
 	AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
