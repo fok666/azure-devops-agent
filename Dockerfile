@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   libssl1.0 \
   docker.io \
+  awscli \
 && rm -rf /var/lib/apt/lists/*
 
 # Install latest Azure CLI
@@ -31,9 +32,6 @@ RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
 && rm -rf /var/lib/apt/lists/* \
 && az config set extension.use_dynamic_install=yes_without_prompt \
 && az extension add --name azure-devops
-
-# Install latest AWS CLI
-RUN apt install awscli
 
 # Install latest PowerShell
 RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
