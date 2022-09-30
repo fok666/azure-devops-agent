@@ -32,6 +32,9 @@ RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
 && az config set extension.use_dynamic_install=yes_without_prompt \
 && az extension add --name azure-devops
 
+# Install latest AWS CLI
+RUN apt install awscli
+
 # Install latest PowerShell
 RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
