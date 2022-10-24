@@ -25,11 +25,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libssl1.0 \
   docker.io \
   awscli \
-&& rm -rf /var/lib/apt/lists/*
+&& apt clean
 
 # Install latest Azure CLI
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
-&& rm -rf /var/lib/apt/lists/* \
+&& apt clean \
 && az config set extension.use_dynamic_install=yes_without_prompt \
 && az extension add --name azure-devops
 
@@ -38,7 +38,8 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsof
 && dpkg -i packages-microsoft-prod.deb \
 && apt-get update \
 && add-apt-repository universe \
-&& apt-get install -y powershell
+&& apt-get install -y powershell \
+&& apt clean
 
 # Install Kubectl - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 RUN curl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
@@ -55,7 +56,7 @@ RUN wget -qO - terraform.gpg https://apt.releases.hashicorp.com/gpg |  gpg --dea
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/terraform-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/terraform.list \
     && apt update \
     && apt install -y terraform \
-    && rm -rf /var/lib/apt/lists/*
+    && apt clean
 
 # Install latest Azure Powershell Modules
 RUN pwsh -Command "Install-Module -Name 'Az' -Scope CurrentUser -Repository PSGallery -Force"
