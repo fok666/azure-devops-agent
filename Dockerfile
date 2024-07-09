@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libssl1.0 \
   docker.io \
   awscli \
-&& apt clean
+ && apt-get upgrade && apt clean
 
 # Install latest Azure CLI
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
