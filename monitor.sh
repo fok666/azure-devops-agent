@@ -9,8 +9,8 @@ grep -q "Terminate" /tmp/scheduledevents.json
 
 if [ $? -eq 0 ]; then
 
-  # Start agent shutdown
-  /opt/stop.sh
+  # Start agent shutdown, if script exists and is executable
+  test -x /opt/stop.sh && /opt/stop.sh
 
   # Confirm event after agent shutdown:
   EventId=`jq -r '.Events[] | .EventId' /tmp/scheduledevents.json`
