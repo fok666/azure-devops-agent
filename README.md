@@ -1,11 +1,11 @@
 # azure-devops-agent
 
-Azure DevOps Self-Hosted Linux Agent. General purpose Docker image with pre-installed tools.
+Azure DevOps Self-Hosted Linux Agent on Docker. This project can be used to create customizable Docker images with pre-installed tools for Azure DevOps pipelines. Pre-installing commonly used tools speeds up pipeline execution.
 
 Goals:
 
 - Run anywhere
-- Auto scalable
+- Scalable
 - Self-configurable
 - Feature rich
 - Customizable
@@ -32,7 +32,7 @@ Bundled tools:
 
 ## Build configuration
 
-Supported `--build-arg` variables are listed below to easily configure the agent image based on your requirements. All options default to 1 (enabled).
+Supported `--build-arg` variables are listed below to easily customize the agent image based on your requirements. All options default to 1 (enabled).
 
 - `ADD_DOCKER`: Installs Docker for Docker-in-Docker support
 - `ADD_AZURE_CLI`: Installs Azure-CLI

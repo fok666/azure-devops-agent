@@ -1,7 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+ARG BASE_VERSION=22.04
+FROM --platform=linux/amd64 ubuntu:${BASE_VERSION}
 
 ARG TARGETARCH=x64
-ARG AGENT_VERSION=3.240.1
 # ARG for optional components, defaults to 1 (enabled), set to 0 to disable
 ARG ADD_DOCKER=1
 ARG ADD_AZURE_CLI=1
@@ -18,6 +18,14 @@ ARG ADD_JQ=1
 ARG ADD_TERRAFORM=1
 ARG ADD_TERRASPACE=1
 ARG ADD_SUDO=1
+
+LABEL org.opencontainers.image.source=https://github.com/fok666/azure-devops-agent
+LABEL org.opencontainers.image.description="Azure DevOps Self-Hosted Linux Agent"
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.authors="Fernando Korndorfer"
+LABEL org.opencontainers.image.version="${AGENT_VERSION}"
+LABEL org.opencontainers.image.base.name="ubuntu"
+LABEL org.opencontainers.image.base.version="22.04"
 
 USER root
 
@@ -48,8 +56,8 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
     libunwind8 \
     libxcb1 \
     libnss3 \
-    libssl-dev\
     libssl3 \
+    libssl-dev\
     liblttng-ust-common1 \
     liblttng-ust-ctl5 \
     liblttng-ust1 \
@@ -160,6 +168,7 @@ RUN test "${ADD_KUSTOMIZE}" = "1" || exit 0 && \
 
 # Install Azure DevOps Agent
 WORKDIR /azp
+ARG AGENT_VERSION=3.240.1
 RUN curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz \
     && ./bin/installdependencies.sh
 
@@ -176,3 +185,5 @@ USER agent
 ENV AGENT_ALLOW_RUNASROOT="false"
 
 ENTRYPOINT [ "./start.sh" ]
+#USER root
+#ENTRYPOINT [ "/bin/bash" ]
