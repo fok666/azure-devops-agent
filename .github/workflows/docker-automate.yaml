@@ -2,10 +2,12 @@ name: Docker Image CI Automation
 on:
   workflow_dispatch:
     inputs:
-      agent_version:
-        description: 'Agent version'
+      port_context:
         required: true
-        default: ''
+        description: includes blueprint, run ID, and entity identifier from Port.
+      agent_version:
+        description: Agent version
+        required: true
         type: string
 
 jobs:
