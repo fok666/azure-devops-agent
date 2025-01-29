@@ -21,7 +21,7 @@ jobs:
         clientId: ${{ secrets.PORT_CLIENT_ID }}
         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
         operation: PATCH_RUN
-        runId: ${{ fromJson(inputs.port_context).run_id }}
+        runId: ${{ fromJson(inputs.port_context).runId }}
         logMessage: |
           Build process begins
 
@@ -35,7 +35,7 @@ jobs:
         clientId: ${{ secrets.PORT_CLIENT_ID }}
         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
         operation: PATCH_RUN
-        runId: ${{ fromJson(inputs.port_context).run_id }}
+        runId: ${{ fromJson(inputs.port_context).runId }}
         logMessage: |
           Build process ended
 
@@ -50,7 +50,7 @@ jobs:
           clientId: ${{ secrets.PORT_CLIENT_ID }}
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           operation: PATCH_RUN
-          runId: ${{ fromJson(inputs.port_context).run_id }}
+          runId: ${{ fromJson(inputs.port_context).runId }}
           logMessage: |
             Post-build actions started.
 
@@ -92,6 +92,6 @@ jobs:
           clientId: ${{ secrets.PORT_CLIENT_ID }}
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           operation: PATCH_RUN
-          runId: ${{ fromJson(inputs.port_context).run_id }}
+          runId: ${{ fromJson(inputs.port_context).runId }}
           logMessage: |
             Workflow completed.
