@@ -149,11 +149,10 @@ RUN test "${ADD_TERRASPACE}" = "1" || exit 0 && \
 
 # Install HELM https://helm.sh/docs/intro/install/
 RUN test "${ADD_HELM}" = "1" || exit 0 && \
-    curl -fsSL https://baltocdn.com/helm/signing.asc -o /usr/share/keyrings/helm.asc \
-    && gpg --dearmor -o /usr/share/keyrings/helm.gpg /usr/share/keyrings/helm.asc \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" > /etc/apt/sources.list.d/helm-stable-debian.list \
+    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" > /etc/apt/sources.list.d/helm-stable-debian.list \
     && apt-get update \
-    && apt-get install helm \
+    && apt-get install -y helm \
     && apt clean
 
 # Install Kustomize https://kubectl.docs.kubernetes.io/installation/kustomize/
