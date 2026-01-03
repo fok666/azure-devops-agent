@@ -44,7 +44,7 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
     ucf \
     debsums \
     libcurl4 \
-    libicu70 \
+    libicu-dev \
     libunwind8 \
     libxcb1 \
     libnss3 \
