@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:24.04
 
 ARG TARGETARCH=x64
 ARG AGENT_VERSION=3.240.1
