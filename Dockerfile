@@ -38,7 +38,7 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
     unzip \
     xz-utils \
     git \
-    netcat \
+    netcat-traditional \
     iputils-ping \
     gss-ntlmssp \
     ucf \
