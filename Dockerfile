@@ -149,7 +149,8 @@ RUN test "${ADD_TERRASPACE}" = "1" || exit 0 && \
 
 # Install HELM https://helm.sh/docs/intro/install/
 RUN test "${ADD_HELM}" = "1" || exit 0 && \
-    curl -sL https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg \
+    curl -fsSL https://baltocdn.com/helm/signing.asc -o /usr/share/keyrings/helm.asc \
+    && gpg --dearmor -o /usr/share/keyrings/helm.gpg /usr/share/keyrings/helm.asc \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" > /etc/apt/sources.list.d/helm-stable-debian.list \
     && apt-get update \
     && apt-get install helm \
