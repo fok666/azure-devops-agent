@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 
 ARG TARGETARCH=x64
-ARG AGENT_VERSION=3.240.1
+ARG AGENT_VERSION=4.266.2
 # ARG for optional components, defaults to 1 (enabled), set to 0 to disable
 ARG ADD_DOCKER=1
 ARG ADD_AZURE_CLI=1
