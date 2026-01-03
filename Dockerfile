@@ -163,7 +163,7 @@ RUN test "${ADD_KUSTOMIZE}" = "1" || exit 0 && \
 
 # Install Azure DevOps Agent
 WORKDIR /azp
-RUN curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz \
+RUN curl -LsS "https://download.agent.dev.azure.com/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz \
     && ./bin/installdependencies.sh
 
 # Agent Startup script
