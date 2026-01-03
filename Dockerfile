@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:24.04
+FROM ubuntu:24.04
 
 ARG TARGETARCH=x64
 ARG AGENT_VERSION=3.240.1
@@ -73,9 +73,12 @@ RUN test "${ADD_DOCKER}" = "1" || exit 0 && \
     && apt clean
 
 # Install awscli
+# Install awscli (official installer for Ubuntu 24.04+)
 RUN test "${ADD_AWS_CLI}" = "1" || exit 0 && \
-    apt-get install -y --no-install-recommends awscli \
-    && apt clean
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
 
 # Install jq
 RUN test "${ADD_JQ}" = "1" || exit 0 && \
