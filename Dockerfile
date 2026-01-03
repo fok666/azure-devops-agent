@@ -1,7 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG TARGETARCH=x64
-ARG AGENT_VERSION=3.240.1
+ARG AGENT_VERSION=4.266.2
 # ARG for optional components, defaults to 1 (enabled), set to 0 to disable
 ARG ADD_DOCKER=1
 ARG ADD_AZURE_CLI=1
@@ -38,13 +38,13 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
     unzip \
     xz-utils \
     git \
-    netcat \
+    netcat-traditional \
     iputils-ping \
     gss-ntlmssp \
     ucf \
     debsums \
     libcurl4 \
-    libicu70 \
+    libicu-dev \
     libunwind8 \
     libxcb1 \
     libnss3 \
@@ -73,9 +73,12 @@ RUN test "${ADD_DOCKER}" = "1" || exit 0 && \
     && apt clean
 
 # Install awscli
+# Install awscli (official installer for Ubuntu 24.04+)
 RUN test "${ADD_AWS_CLI}" = "1" || exit 0 && \
-    apt-get install -y --no-install-recommends awscli \
-    && apt clean
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
 
 # Install jq
 RUN test "${ADD_JQ}" = "1" || exit 0 && \
@@ -146,10 +149,10 @@ RUN test "${ADD_TERRASPACE}" = "1" || exit 0 && \
 
 # Install HELM https://helm.sh/docs/intro/install/
 RUN test "${ADD_HELM}" = "1" || exit 0 && \
-    curl -sL https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" > /etc/apt/sources.list.d/helm-stable-debian.list \
+    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" > /etc/apt/sources.list.d/helm-stable-debian.list \
     && apt-get update \
-    && apt-get install helm \
+    && apt-get install -y helm \
     && apt clean
 
 # Install Kustomize https://kubectl.docs.kubernetes.io/installation/kustomize/
@@ -160,7 +163,7 @@ RUN test "${ADD_KUSTOMIZE}" = "1" || exit 0 && \
 
 # Install Azure DevOps Agent
 WORKDIR /azp
-RUN curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz \
+RUN curl -LsS "https://download.agent.dev.azure.com/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz \
     && ./bin/installdependencies.sh
 
 # Agent Startup script

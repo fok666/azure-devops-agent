@@ -47,9 +47,13 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
       - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
+        shell: bash
+        run: |
+          ref="${GITHUB_REF#refs/heads/}"
+          ref="${ref#refs/pull/}"
+          ref="${ref//\//-}"
+          echo "branch=$ref" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.3.0
