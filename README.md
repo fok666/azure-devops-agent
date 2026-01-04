@@ -2,6 +2,8 @@
 
 Azure DevOps Self-Hosted Linux Agent. General purpose Docker image with pre-installed tools.
 
+[![CodeQL](https://github.com/fok666/azure-devops-agent/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fok666/azure-devops-agent/actions/workflows/github-code-scanning/codeql) [![Dependabot Updates](https://github.com/fok666/azure-devops-agent/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/fok666/azure-devops-agent/actions/workflows/dependabot/dependabot-updates) [![Docker Image CI](https://github.com/fok666/azure-devops-agent/actions/workflows/docker-image.yml/badge.svg)](https://github.com/fok666/azure-devops-agent/actions/workflows/docker-image.yml)
+
 Goals:
 
 - Run anywhere
