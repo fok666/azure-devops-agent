@@ -27,6 +27,7 @@ Bundled tools:
 - [Helm](https://helm.sh/docs/intro/install/)
 - [JQ](https://github.com/jqlang/jq) & [YQ](https://github.com/mikefarah/yq)
 - [Terraform](https://developer.hashicorp.com/terraform/install)
+- [OpenTofu](https://opentofu.org/docs/intro/install/)
 - [Terraspace](https://terraspace.cloud/docs/install/)
 
 
@@ -47,6 +48,7 @@ Supported `--build-arg` variables are listed below to easily configure the agent
 - `ADD_JQ`: Installs `jq` tool
 - `ADD_YQ`: Installs `yq` tool
 - `ADD_TERRAFORM`: Installs `terraform` tool
+- `ADD_OPENTOFU`: Installs `opentofu` tool
 - `ADD_TERRASPACE`: Installs `terraspace` tool
 - `ADD_SUDO`: Installs and enables `sudo` for the agent user group
 

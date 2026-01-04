@@ -16,6 +16,7 @@ ARG ADD_HELM=1
 ARG ADD_YQ=1
 ARG ADD_JQ=1
 ARG ADD_TERRAFORM=1
+ARG ADD_OPENTOFU=1
 ARG ADD_TERRASPACE=1
 ARG ADD_SUDO=1
 
@@ -139,6 +140,15 @@ RUN test "${ADD_TERRAFORM}" = "1" || exit 0 && \
     && apt install -y terraform \
     && apt clean
 
+# Install OpenTofu https://opentofu.org/docs/intro/install/
+RUN test "${ADD_OPENTOFU}" = "1" || exit 0 && \
+    curl -fsSL https://packages.opentofu.org/opentofu/tofu/gpgkey | gpg --dearmor -o /usr/share/keyrings/opentofu-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/opentofu-archive-keyring.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main" > /etc/apt/sources.list.d/opentofu.list \
+    && apt update \
+    && apt install -y tofu \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Instal Terraspace https://terraspace.cloud/docs/install/
 RUN test "${ADD_TERRASPACE}" = "1" || exit 0 && \
     curl -sL https://apt.boltops.com/boltops-key.public | apt-key add - \
@@ -168,6 +178,7 @@ RUN curl -LsS "https://download.agent.dev.azure.com/agent/${AGENT_VERSION}/vsts-
 
 # Agent Startup script
 COPY --chmod=0755 ./start.sh .
+COPY --chmod=0755 ./test-tools.sh .
 
 # Create agent user and set up home directory
 RUN useradd -m -d /home/agent agent \
