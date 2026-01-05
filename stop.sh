@@ -1,23 +1,37 @@
 #!/bin/bash
+set -e
 
-CPU_COUNT=$(lscpu -p=CPU | grep -v "^#" | wc -l)
-MAX_CPU=$(($CPU_COUNT>1 ? 2 : 1))
+# Azure DevOps Agent Stop Script
+# Gracefully stops and removes all Azure DevOps agent containers
 
-# Get URL and PAT from first running instance:
-eval $(sudo docker inspect agent1 | jq -r '. [] | . | .Config.Env[]' | grep "AZP_TOKEN\|AZP_URL")
+echo "Stopping Azure DevOps agents..."
+echo ""
 
-# Graceful agent shutdown
-for R in `seq 1 $MAX_CPU`; do
-  sudo docker exec -ti \
-    -e VSTS_AGENT_INPUT_AUTH="pat" \
-    -e VSTS_AGENT_INPUT_URL="$AZP_URL" \
-    -e VSTS_AGENT_INPUT_TOKEN="$AZP_TOKEN" \
-    agent$R \
-    ./config.sh remove --unattended \
-  && sudo docker stop agent$R \
-  && sudo docker rm agent$R &
+# Get list of running agent containers
+AGENT_CONTAINERS=$(docker ps --filter "name=azp-agent-" --format "{{.Names}}" | sort)
+
+if [ -z "$AGENT_CONTAINERS" ]; then
+  echo "No running Azure DevOps agent containers found."
+  exit 0
+fi
+
+CONTAINER_COUNT=$(echo "$AGENT_CONTAINERS" | wc -l | tr -d ' ')
+echo "Found $CONTAINER_COUNT agent container(s)"
+echo ""
+
+# Stop each agent gracefully
+for CONTAINER_NAME in $AGENT_CONTAINERS; do
+  echo "Stopping $CONTAINER_NAME..."
+  
+  # Try graceful shutdown first (agent will unregister itself via start.sh cleanup)
+  docker stop -t 30 "$CONTAINER_NAME" > /dev/null 2>&1 || true
+  
+  # Remove the container
+  docker rm "$CONTAINER_NAME" > /dev/null 2>&1 || true
+  
+  echo "  $CONTAINER_NAME stopped and removed"
 done
 
-wait
-
+echo ""
+echo "All Azure DevOps agents stopped successfully!"
 exit 0

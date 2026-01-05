@@ -86,28 +86,56 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# Get the agent startup, stop and monitor scripts and make them executable:
+# Get the agent management scripts and make them executable:
 sudo curl -sO https://raw.githubusercontent.com/fok666/azure-devops-agent/main/run.sh
-sudo curl -sO https://raw.githubusercontent.com/fok666/azure-devops-agent/main/monitor.sh
 sudo curl -sO https://raw.githubusercontent.com/fok666/azure-devops-agent/main/stop.sh
+sudo curl -sO https://raw.githubusercontent.com/fok666/azure-devops-agent/main/vmss_monitor.sh
+sudo curl -sO https://raw.githubusercontent.com/fok666/azure-devops-agent/main/ec2_monitor.sh
 sudo chmod +x *.sh
 
 # Set the parameters from Azure DevOps:
-export ORG_URL="https://dev.azure.com/YOUR_ORG"
-export DEVOPS_PAT="xxxxxxxxxxxxxxxxxxxxxxxxxxx"
-export AGENT_POOL_NAME="YourLinuxAgentPool"
+export AZP_URL="https://dev.azure.com/YOUR_ORG"
+export AZP_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export AZP_POOL="YourLinuxAgentPool"
 
-# Start the agents in privileged mode, one agent for each vCPU, using the parameters above:
-sudo ./run.sh fok666/azuredevops:latest $ORG_URL $DEVOPS_PAT $AGENT_POOL_NAME
+# Start the agents in privileged mode, one agent for each vCPU (default), using the parameters above:
+sudo ./run.sh fok666/azuredevops:latest $AZP_URL $AZP_TOKEN $AZP_POOL
+
+# Or specify a custom number of agents (e.g., 4 agents):
+sudo ./run.sh fok666/azuredevops:latest $AZP_URL $AZP_TOKEN $AZP_POOL 4
 ```
 
 
-## Azure VMSS support
+## Cloud Provider Support
 
-This project is designed to use Azure Virtual Machine Scale Sets, but can be used with different settings.
+This project supports graceful shutdown for multiple cloud providers:
 
-- `monitor.sh`: Add this script to the host's cron to monitor VMSS shutdown events. Requires `curl` and `jq`.
-- `stop.sh`: Add this script to `/opt/stop.sh` to enable graceful Agent shutdown. Requires SUDO.
+### Azure VMSS (Virtual Machine Scale Sets)
+- `vmss_monitor.sh`: Monitor Azure VMSS scheduled events for termination notices
+- Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/linux/scheduled-events
+
+### AWS EC2 Spot Instances
+- `ec2_monitor.sh`: Monitor EC2 spot instance termination notices
+- Reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-instance-termination-notices.html
+
+### Setup
+
+```bash
+# Copy stop script to /opt for monitor scripts to use:
+sudo cp stop.sh /opt/stop.sh
+sudo chmod +x /opt/stop.sh
+
+# For Azure VMSS - check every minute:
+(crontab -l 2>/dev/null; echo "* * * * * /opt/vmss_monitor.sh >> /var/log/vmss_monitor.log 2>&1") | crontab -
+
+# For AWS EC2 Spot - check every 5 seconds:
+(crontab -l 2>/dev/null; echo "* * * * * /opt/ec2_monitor.sh >> /var/log/ec2_monitor.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * sleep 5; /opt/ec2_monitor.sh >> /var/log/ec2_monitor.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * sleep 10; /opt/ec2_monitor.sh >> /var/log/ec2_monitor.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * sleep 15; /opt/ec2_monitor.sh >> /var/log/ec2_monitor.log 2>&1") | crontab -
+```
+
+Both monitor scripts require `curl` and `jq` to be installed.
 
 
 # TO DO
