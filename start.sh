@@ -13,7 +13,7 @@ if [ -z "$AZP_TOKEN_FILE" ]; then
   fi
 
   AZP_TOKEN_FILE=/azp/.token
-  echo -n $AZP_TOKEN > "$AZP_TOKEN_FILE"
+  echo -n "$AZP_TOKEN" > "$AZP_TOKEN_FILE"
 fi
 
 unset AZP_TOKEN
@@ -31,7 +31,7 @@ cleanup() {
     # If the agent has some running jobs, the configuration removal process will fail.
     # So, give it some time to finish the job.
     while true; do
-      ./config.sh remove --unattended --auth PAT --token $(cat "$AZP_TOKEN_FILE") && break
+      ./config.sh remove --unattended --auth PAT --token "$(cat "$AZP_TOKEN_FILE")" && break
 
       echo "Retrying in 30 seconds..."
       sleep 30
@@ -56,7 +56,7 @@ print_header "1. Configuring Azure Pipelines agent..."
   --agent "${AZP_AGENT_NAME:-$(hostname)}" \
   --url "$AZP_URL" \
   --auth PAT \
-  --token $(cat "$AZP_TOKEN_FILE") \
+  --token "$(cat "$AZP_TOKEN_FILE")" \
   --pool "${AZP_POOL:-Default}" \
   --work "${AZP_WORK:-_work}" \
   --replace \
