@@ -76,7 +76,7 @@ echo "CPUs per agent: $MAX_CPU"
 echo ""
 
 # Launch agents
-for R in $(seq 1 $AGENT_COUNT); do
+for R in $(seq 1 "$AGENT_COUNT"); do
   AGENT_NAME="azp-agent-$(hostname)-$R"
   WORK_DIR="/mnt/azp-agent${R}/_work"
   CONTAINER_NAME="azp-agent-$R"
@@ -93,6 +93,10 @@ for R in $(seq 1 $AGENT_COUNT); do
   fi
   
   # Run Azure DevOps agent container
+  # SECURITY NOTE: --privileged mode grants extended privileges to the container.
+  # This is required for Docker-in-Docker but poses security risks.
+  # Consider using rootless Docker or Docker socket mounting as alternatives.
+  # If --privileged is not needed for your use case, remove this flag.
   docker run \
     --privileged \
     --tty \
