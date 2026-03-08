@@ -102,7 +102,7 @@ https://hub.docker.com/r/fok666/azuredevops
 
 
 ### Azure DevOps Self-Hosted Reference
-https://docs.microsoft.com/azure/devops/pipelines/agents/docker?view=azure-devops
+https://learn.microsoft.com/azure/devops/pipelines/agents/docker
 
 
 ## Running
@@ -135,10 +135,10 @@ export AZP_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export AZP_POOL="YourLinuxAgentPool"
 
 # Start the agents in privileged mode, one agent for each vCPU (default), using the parameters above:
-sudo ./run.sh fok666/azuredevops:latest $AZP_URL $AZP_TOKEN $AZP_POOL
+sudo ./run.sh fok666/azuredevops:latest-full $AZP_URL $AZP_TOKEN $AZP_POOL
 
 # Or specify a custom number of agents (e.g., 4 agents):
-sudo ./run.sh fok666/azuredevops:latest $AZP_URL $AZP_TOKEN $AZP_POOL 4
+sudo ./run.sh fok666/azuredevops:latest-full $AZP_URL $AZP_TOKEN $AZP_POOL 4
 ```
 
 
